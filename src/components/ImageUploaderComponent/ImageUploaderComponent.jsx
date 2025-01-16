@@ -9,11 +9,15 @@ const ImageUploaderComponent = ({ onImageUpload }) => {
     const handleImageUpload = (e) => {
         const file = e.target.files[0]
         if (file) {
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                onImageUpload(reader.result)
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader()
+                reader.onloadend = () => {
+                    onImageUpload(reader.result)
+                }
+                reader.readAsDataURL(file)
+            } else {
+                alert('Please upload a valid image file.')
             }
-            reader.readAsDataURL(file)
         }
     }
 

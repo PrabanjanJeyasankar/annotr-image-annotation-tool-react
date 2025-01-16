@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './ImageAnnotatorComponent.module.css'
 
-const ImageAnnotatorComponent = ({ position, isVisible, onSave, onClose }) => {
+const ImageAnnotatorComponent = ({
+    position,
+    isVisible,
+    onSave,
+    onDelete,
+    onClose,
+    annotation,
+    isEditing,
+}) => {
     const formRef = useRef(null)
-    const [annotation, setAnnotation] = useState('')
-
-    useEffect(() => {
-        if (isVisible) {
-            console.log('Annotation position:', position)
-        }
-    }, [position, isVisible])
+    const [text, setText] = useState('')
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -27,15 +29,15 @@ const ImageAnnotatorComponent = ({ position, isVisible, onSave, onClose }) => {
         }
     }, [isVisible, onClose])
 
+    useEffect(() => {
+        setText(annotation || '')
+    }, [annotation])
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (annotation.trim()) {
-            const newAnnotation = {
-                text: annotation,
-                position: position,
-            }
-            onSave(newAnnotation)
-            setAnnotation('')
+        if (text.trim()) {
+            onSave({ text, position })
+            setText('')
         }
     }
 
@@ -48,27 +50,32 @@ const ImageAnnotatorComponent = ({ position, isVisible, onSave, onClose }) => {
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
-                transform: 'translate(-50%, -100%)',
-                marginTop: '-10px',
             }}>
             <form onSubmit={handleSubmit}>
                 <div className={styles.input_container}>
-                    <div>
-                        <label htmlFor='annotation' className={styles.label}>
-                            Add Annotation
-                        </label>
-                        <textarea
-                            id='annotation'
-                            value={annotation}
-                            onChange={(e) => setAnnotation(e.target.value)}
-                            className={styles.input_field}
-                            rows='3'
-                            autoFocus
-                        />
+                   
+                    <textarea
+                        id='annotation'
+                        placeholder='Add annotations...'
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className={styles.input_field}
+                        rows='3'
+                        autoFocus
+                    />
+                    <div className={styles.button_container}>
+                        {isEditing && (
+                            <button
+                                type='button'
+                                onClick={onDelete}
+                                className={styles.delete_button}>
+                                Delete
+                            </button>
+                        )}
+                        <button type='submit' className={styles.save_button}>
+                            {isEditing ? 'Update' : 'Save'}
+                        </button>
                     </div>
-                    <button type='submit' className={styles.save_button}>
-                        Save Annotation
-                    </button>
                 </div>
             </form>
         </div>
