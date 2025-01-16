@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter';
+    box-sizing: border-box;
+    margin: 0 auto;
+    min-width: 320px;
+
+    --color-primary-violet: #6965db;
+    --color-background-violet: #e0dfff;
+    --color-background-violet-light: #e0dfff75;
+    --color-surface-low: #e7e7e7;
+    --primary-gray: #ffffff50;
+    --secondary-gray: #ffffff80;
+    --gray-100: #a1a1a1;
+    --gray-300: #333;
+    --gray-500: #555;
+    --gray-600: #666;
+    --gray-800: #757575;
+    --gray-ccc: #ccc;
+}
+
+
+@font-face {
+    font-family: 'virgil';
+    font-weight: 500;
+    font-style: normal;
+    src: url('./assets/fonts/Virgil.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 100;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Thin.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 200;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-ExtraLight.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 300;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 400;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 500;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 600;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 700;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 800;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-ExtraBold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 900;
+    font-style: normal;
+    src: url('./assets/fonts/Inter-Black.woff2') format('woff2');
+}
