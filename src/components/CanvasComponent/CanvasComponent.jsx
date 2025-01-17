@@ -1,28 +1,32 @@
 import { useCallback, useRef, useState } from 'react'
+import useAnnotations from '../../hooks/useAnnotations'
+import useImageUpload from '../../hooks/useImageUpload'
 import QuoteSvg from '../../svg/QuoteSvg/QuoteSvg'
 import ImageAnnotatorComponent from '../ImageAnnotatorComponent/ImageAnnotatorComponent'
 import ImageUploaderComponent from '../ImageUploaderComponent/ImageUploaderComponent'
+import ImageWithAnnotaionsComponent from '../ImageWithAnnotaionsComponent/ImageWithAnnotaionsComponent'
 import styles from './CanvasComponent.module.css'
 
 const CanvasComponent = () => {
     const divRef = useRef(null)
-    const dragRef = useRef(null)
-    const [imageData, setImageData] = useState(null)
+    const dragOffset = useRef({ x: 0, y: 0 })
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-    const [annotations, setAnnotations] = useState([])
     const [isFormVisible, setIsFormVisible] = useState(false)
-    const [isImageUploaded, setIsImageUploaded] = useState(false)
-    const [editingAnnotation, setEditingAnnotation] = useState(null)
-    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
 
-    const onImageUpload = (base64Image) => {
-        const img = new Image()
-        img.onload = () => {
-            setImageData(base64Image)
-            setIsImageUploaded(true)
-        }
-        img.src = base64Image
-    }
+    const {
+        annotations,
+        editingAnnotation,
+        handleSaveAnnotation,
+        handleDeleteAnnotation,
+        handleDotClick,
+        handleDragStart,
+        updateDraggedAnnotation,
+        endDrag,
+        dragRef,
+    } = useAnnotations()
+
+    const { imageData, isImageUploaded, onImageUpload, clearImage } =
+        useImageUpload()
 
     const handleImageClick = useCallback(
         (e) => {
@@ -35,69 +39,10 @@ const CanvasComponent = () => {
                 const y = e.clientY - rect.top
                 setMousePosition({ x, y })
                 setIsFormVisible(true)
-                setEditingAnnotation(null)
             }
         },
         [isImageUploaded]
     )
-
-    const handleClearImage = () => {
-        setImageData(null)
-        setIsImageUploaded(false)
-        setAnnotations([])
-        setIsFormVisible(false)
-        setEditingAnnotation(null)
-    }
-
-    const handleDotClick = useCallback((e, annotation) => {
-        e.stopPropagation()
-        setEditingAnnotation(annotation)
-        setMousePosition(annotation.position)
-        setIsFormVisible(true)
-    }, [])
-
-    const handleSaveAnnotation = useCallback(
-        (newAnnotation) => {
-            setAnnotations((prev) => {
-                if (editingAnnotation) {
-                    return prev.map((annotate) =>
-                        annotate.id === editingAnnotation.id
-                            ? {
-                                  ...newAnnotation,
-                                  id: editingAnnotation.id,
-                                  position: editingAnnotation.position,
-                              }
-                            : annotate
-                    )
-                } else {
-                    return [...prev, { ...newAnnotation, id: Date.now() }]
-                }
-            })
-            setIsFormVisible(false)
-            setEditingAnnotation(null)
-        },
-        [editingAnnotation]
-    )
-
-    const handleDeleteAnnotation = useCallback((annotationId) => {
-        setAnnotations((prev) => prev.filter((annotate) => annotate.id !== annotationId))
-        setIsFormVisible(false)
-        setEditingAnnotation(null)
-    }, [])
-
-    const handleDragStart = useCallback((e, annotation) => {
-        e.stopPropagation()
-        const dot = e.currentTarget
-        const rect = dot.getBoundingClientRect()
-        setDragOffset({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-        })
-        dragRef.current = annotation.id
-
-        document.addEventListener('mousemove', handleDrag)
-        document.addEventListener('mouseup', handleDragEnd)
-    }, [])
 
     const handleDrag = useCallback(
         (e) => {
@@ -108,34 +53,39 @@ const CanvasComponent = () => {
 
             const x = Math.max(
                 0,
-                Math.min(e.clientX - rect.left - dragOffset.x + 12, rect.width)
+                Math.min(
+                    e.clientX - rect.left - dragOffset.current.x + 12,
+                    rect.width
+                )
             )
             const y = Math.max(
                 0,
-                Math.min(e.clientY - rect.top - dragOffset.y + 12, rect.height)
+                Math.min(
+                    e.clientY - rect.top - dragOffset.current.y + 12,
+                    rect.height
+                )
             )
 
-            setAnnotations((prev) =>
-                prev.map((ann) =>
+            updateDraggedAnnotation(
+                annotations.map((ann) =>
                     ann.id === dragRef.current
                         ? { ...ann, position: { x, y } }
                         : ann
                 )
             )
         },
-        [dragOffset]
+        [annotations, updateDraggedAnnotation]
     )
 
     const handleDragEnd = useCallback(() => {
-        dragRef.current = null
+        endDrag()
         document.removeEventListener('mousemove', handleDrag)
         document.removeEventListener('mouseup', handleDragEnd)
-    }, [handleDrag])
-
+    }, [handleDrag, endDrag])
 
     return (
         <div className={styles.canvas_container}>
-            <div className={styles.app_logo} onClick={handleClearImage}>
+            <div className={styles.app_logo} onClick={clearImage}>
                 <QuoteSvg width={24} height={24} />
                 <p className={styles.app_name}>Annotr</p>
             </div>
@@ -146,30 +96,32 @@ const CanvasComponent = () => {
                     </div>
                 )}
                 {isImageUploaded && (
-                    <img
-                        src={imageData}
-                        alt='Uploaded'
-                        className={styles.uploaded_image}
-                        onClick={handleImageClick}
+                    <ImageWithAnnotaionsComponent
+                        ImageWithAnnotaionsComponent
+                        imageData={imageData}
+                        annotations={annotations}
+                        onImageClick={handleImageClick}
+                        onDotClick={handleDotClick}
+                        onDragStart={(e, annotation) =>
+                            handleDragStart(
+                                e,
+                                annotation,
+                                dragOffset,
+                                handleDrag,
+                                handleDragEnd
+                            )
+                        }
+                        onDrag={(id, position) => {
+                            updateDraggedAnnotation(
+                                annotations.map((ann) =>
+                                    ann.id === id ? { ...ann, position } : ann
+                                )
+                            )
+                        }}
+                        onDragEnd={handleDragEnd}
+                        dragRef={dragRef}
                     />
                 )}
-                {annotations.map((annotation) => (
-                    <div
-                        key={annotation.id}
-                        className={`${styles.annotation_outer_dot} ${
-                            dragRef.current === annotation.id
-                                ? styles.dragging
-                                : ''
-                        }`}
-                        style={{
-                            left: `${annotation.position.x}px`,
-                            top: `${annotation.position.y}px`,
-                        }}
-                        onClick={(e) => handleDotClick(e, annotation)}
-                        onMouseDown={(e) => handleDragStart(e, annotation)}>
-                        <div className={`${styles.annotation_inner_dot}`}></div>
-                    </div>
-                ))}
             </div>
 
             {isImageUploaded && (
@@ -182,10 +134,7 @@ const CanvasComponent = () => {
                             ? () => handleDeleteAnnotation(editingAnnotation.id)
                             : null
                     }
-                    onClose={() => {
-                        setIsFormVisible(false)
-                        setEditingAnnotation(null)
-                    }}
+                    onClose={() => setIsFormVisible(false)}
                     annotation={editingAnnotation?.text || ''}
                     isEditing={!!editingAnnotation}
                 />

@@ -1,0 +1,26 @@
+
+
+.annotation_outer_dot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-background-violet-light);
+    background: radial-gradient(
+        circle,
+        var(--color-primary-violet) 0%,
+        var(--color-background-violet-light) 60%
+    );
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 40;
+}
+
+.annotation_inner_dot {
+    width: 15px;
+    height: 15px;
+    background-color: var(--color-primary-violet);
+    border-radius: 50%;
+}
