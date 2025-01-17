@@ -23,14 +23,8 @@
     --color-surface-low: #e7e7e7;
     --color-primary-gray: #666;
     --color-secondary-gray: #898989;
-    --gray-100: #a1a1a1;
-    --gray-300: #333;
-    --gray-500: #555;
-    --gray-600: #666;
-    --gray-800: #757575;
-    --gray-ccc: #ccc;
+    --color-primary-red: #ff4343;
 }
-
 
 @font-face {
     font-family: 'virgil';
@@ -103,7 +97,7 @@
 }
 
 @layer base {
-  :root {
+    :root {
         --background: 0 0% 100%;
         --foreground: 222.2 84% 4.9%;
         --card: 0 0% 100%;
@@ -130,7 +124,7 @@
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
     }
-  .dark {
+    .dark {
         --background: 222.2 84% 4.9%;
         --foreground: 210 40% 98%;
         --card: 222.2 84% 4.9%;
@@ -159,10 +153,10 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
 }

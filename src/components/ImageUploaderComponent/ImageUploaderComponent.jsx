@@ -3,6 +3,7 @@ import ImagePlusSvg from '../../svg/ImagePlusSvg/ImagePlusSvg'
 import QuoteSvg from '../../svg/QuoteSvg/QuoteSvg'
 import DragAndDropUploaderComponent from '../DragAndDropUploaderComponent/DragAndDropUploaderComponent'
 import styles from './ImageUploaderComponent.module.css'
+import ButtonComponent from '@/elements/ButtonComponent/ButtonComponent'
 
 const ImageUploaderComponent = ({ onImageUpload }) => {
     return (
@@ -13,9 +14,9 @@ const ImageUploaderComponent = ({ onImageUpload }) => {
                 Drag & Drop your image here or click to upload
             </p>
             <div className={styles.image_uploader_container}>
-                <button className={styles.upload_trigger_button}>
+                <ButtonComponent className={styles.upload_trigger_button}>
                     <ImagePlusSvg /> Upload image
-                </button>
+                </ButtonComponent>
             </div>
         </DragAndDropUploaderComponent>
     )

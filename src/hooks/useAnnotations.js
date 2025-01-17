@@ -1,43 +1,48 @@
-import { useState, useCallback, useRef } from 'react'
+import { useRef, useState } from 'react'
 
 const useAnnotations = () => {
     const [annotations, setAnnotations] = useState([])
     const [editingAnnotation, setEditingAnnotation] = useState(null)
     const dragRef = useRef(null)
 
-    const handleSaveAnnotation = useCallback(
-        (newAnnotation) => {
-            setAnnotations((prev) => {
-                if (editingAnnotation) {
-                    return prev.map((annotate) =>
-                        annotate.id === editingAnnotation.id
-                            ? {
-                                  ...newAnnotation,
-                                  id: editingAnnotation.id,
-                                  position: editingAnnotation.position,
-                              }
-                            : annotate
-                    )
-                } else {
-                    return [...prev, { ...newAnnotation, id: Date.now() }]
-                }
-            })
-            setEditingAnnotation(null)
-        },
-        [editingAnnotation]
-    )
-
-    const handleDeleteAnnotation = useCallback((annotationId) => {
-        setAnnotations((prev) => prev.filter((annotate) => annotate.id !== annotationId))
+    const handleSaveAnnotation = (newAnnotation) => {
+        setAnnotations((prev) => {
+            if (editingAnnotation) {
+                return prev.map((annotate) =>
+                    annotate.id === editingAnnotation.id
+                        ? {
+                              ...newAnnotation,
+                              id: editingAnnotation.id,
+                              position: editingAnnotation.position,
+                          }
+                        : annotate
+                )
+            } else {
+                return [...prev, { ...newAnnotation, id: Date.now() }]
+            }
+        })
         setEditingAnnotation(null)
-    }, [])
+    }
 
-    const handleDotClick = useCallback((e, annotation) => {
+    const handleDeleteAnnotation = (annotationId) => {
+        setAnnotations((prev) =>
+            prev.filter((annotate) => annotate.id !== annotationId)
+        )
+        setEditingAnnotation(null)
+    }
+
+    const handleDotClick = (e, annotation) => {
         e.stopPropagation()
         setEditingAnnotation(annotation)
-    }, [])
+    }
 
-    const handleDragStart = useCallback((e, annotation, dragOffset, handleDrag, handleDragEnd) => {
+    const handleDragStart = (
+        e,
+        annotation,
+        dragOffset,
+        handleDrag,
+        handleDragEnd
+    ) => {
         e.stopPropagation()
         const dot = e.currentTarget
         const rect = dot.getBoundingClientRect()
@@ -49,15 +54,15 @@ const useAnnotations = () => {
 
         document.addEventListener('mousemove', handleDrag)
         document.addEventListener('mouseup', handleDragEnd)
-    }, [])
+    }
 
-    const updateDraggedAnnotation = useCallback((newAnnotations) => {
+    const updateDraggedAnnotation = (newAnnotations) => {
         setAnnotations(newAnnotations)
-    }, [])
+    }
 
-    const endDrag = useCallback(() => {
+    const endDrag = () => {
         dragRef.current = null
-    }, [])
+    }
 
     return {
         annotations,
