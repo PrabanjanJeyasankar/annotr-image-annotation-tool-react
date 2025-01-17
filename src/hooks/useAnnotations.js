@@ -32,8 +32,10 @@ const useAnnotations = () => {
     }
 
     const handleDotClick = (e, annotation) => {
+        console.log('Dot clicked:', annotation)
         e.stopPropagation()
         setEditingAnnotation(annotation)
+        
     }
 
     const handleDragStart = (

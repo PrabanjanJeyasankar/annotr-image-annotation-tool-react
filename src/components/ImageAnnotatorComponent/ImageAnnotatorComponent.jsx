@@ -1,7 +1,10 @@
+import ButtonComponent from '@/elements/ButtonComponent/ButtonComponent'
+import CrossSvg from '@/svg/CrossSvg/CrossSvg'
+import EditPenSvg from '@/svg/EditPenSvg/EditPenSvg'
+import TrashSvg from '@/svg/TrashSvg/TrashSvg'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
 import styles from './ImageAnnotatorComponent.module.css'
-import ButtonComponent from '@/elements/ButtonComponent/ButtonComponent'
 
 const ImageAnnotatorComponent = ({
     position,
@@ -13,6 +16,7 @@ const ImageAnnotatorComponent = ({
     isEditing,
 }) => {
     const formRef = useRef(null)
+    const inputRef = useRef(null);
     const [text, setText] = useState('')
     const [error, setError] = useState('')
 
@@ -51,6 +55,14 @@ const ImageAnnotatorComponent = ({
         }
     }
 
+    const handleEdit = () => {
+        setText(annotation || '')
+        setError('')
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+    }
+
     if (!isVisible) return null
 
     return (
@@ -67,6 +79,7 @@ const ImageAnnotatorComponent = ({
                         id='annotation'
                         placeholder='Add annotations...'
                         value={text}
+                        ref={inputRef}
                         onChange={(e) => setText(e.target.value)}
                         className={styles.input_field}
                         rows='2'
@@ -75,14 +88,29 @@ const ImageAnnotatorComponent = ({
                     {error && <p className={styles.error_message}>{error}</p>}
                     <div className={styles.button_container}>
                         {isEditing && (
-                            <ButtonComponent
-                                type='button'
-                                onClick={onDelete}
-                                className={styles.delete_button}>
-                                Delete
-                            </ButtonComponent>
+                            <div className={styles.edit_delete_actions}>
+                                <ButtonComponent
+                                    type='button'
+                                    onClick={onDelete}
+                                    className={styles.delete_button}>
+                                    <TrashSvg />
+                                </ButtonComponent>
+                                <ButtonComponent
+                                    type='button'
+                                    onClick={handleEdit}
+                                    className={styles.edit_button}>
+                                    <EditPenSvg />
+                                </ButtonComponent>
+                            </div>
                         )}
-                        <ButtonComponent type='submit' className={styles.save_button}>
+                        <ButtonComponent
+                            onClick={onClose}
+                            className={styles.close_button}>
+                            <CrossSvg />
+                        </ButtonComponent>
+                        <ButtonComponent
+                            type='submit'
+                            className={styles.save_button}>
                             {isEditing ? 'Update' : 'Save'}
                         </ButtonComponent>
                     </div>

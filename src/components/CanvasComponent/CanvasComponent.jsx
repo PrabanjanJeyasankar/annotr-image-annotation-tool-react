@@ -74,7 +74,7 @@ const CanvasComponent = () => {
                 )
             )
         },
-        [annotations, updateDraggedAnnotation]
+        [annotations, updateDraggedAnnotation, dragRef]
     )
 
     const handleDragEnd = useCallback(() => {
@@ -101,7 +101,10 @@ const CanvasComponent = () => {
                         imageData={imageData}
                         annotations={annotations}
                         onImageClick={handleImageClick}
-                        onDotClick={handleDotClick}
+                        onDotClick={(e, annotation) => {
+                            handleDotClick(e, annotation)
+                            setIsFormVisible(true)
+                        }}
                         onDragStart={(e, annotation) =>
                             handleDragStart(
                                 e,

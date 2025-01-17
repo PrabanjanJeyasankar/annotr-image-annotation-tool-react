@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useRef, useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import styles from './ImageWithAnnotaionsComponent.module.css'
 
 const ImageWithAnnotaionsComponent = ({
@@ -21,14 +21,8 @@ const ImageWithAnnotaionsComponent = ({
             if (!img) return
 
             const rect = img.getBoundingClientRect()
-            const x = Math.max(
-                0,
-                Math.min(e.clientX - rect.left, rect.width)
-            )
-            const y = Math.max(
-                0,
-                Math.min(e.clientY - rect.top, rect.height)
-            )
+            const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width))
+            const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height))
 
             onDrag(dragRef.current, { x, y })
         },
@@ -49,7 +43,7 @@ const ImageWithAnnotaionsComponent = ({
             {imageData && (
                 <img
                     src={imageData}
-                    alt="Uploaded"
+                    alt='Uploaded'
                     className={styles.uploaded_image}
                     onClick={onImageClick}
                     ref={imageRef}
@@ -59,9 +53,7 @@ const ImageWithAnnotaionsComponent = ({
                 <div
                     key={annotation.id}
                     className={`${styles.annotation_outer_dot} ${
-                        dragRef.current === annotation.id
-                            ? styles.dragging
-                            : ''
+                        dragRef.current === annotation.id ? styles.dragging : ''
                     }`}
                     style={{
                         left: `${annotation.position.x}px`,
@@ -70,6 +62,9 @@ const ImageWithAnnotaionsComponent = ({
                     onMouseDown={(e) => onDragStart(e, annotation)}
                     onClick={(e) => onDotClick(e, annotation)}>
                     <div className={styles.annotation_inner_dot}></div>
+                    <div className={styles.tooltip}>
+                        {annotation.text || 'No Annotation'}
+                    </div>
                 </div>
             ))}
         </div>
