@@ -1,4 +1,4 @@
-function ArrowSvg() {
+function CustomCursorArrowSvg() {
     return (
         <svg
             width='24'
@@ -12,8 +12,8 @@ function ArrowSvg() {
                     fill='white'
                 />
                 <path
-                    fill-rule='evenodd'
-                    clip-rule='evenodd'
+                    fillRule='evenodd'
+                    clipRule='evenodd'
                     d='M8 5.41418V17.4142L11 14.4142L13.5 19.4142C13.5 19.4142 14.1763 19.63 14.5 19.4142C14.8237 19.1984 15.1457 18.7638 15 18.4142C14.3123 16.7638 12.5 13.4142 12.5 13.4142H16L8 5.41418Z'
                     fill='#202125'
                 />
@@ -26,8 +26,8 @@ function ArrowSvg() {
                     width='15.0142'
                     height='21.1784'
                     filterUnits='userSpaceOnUse'
-                    color-interpolation-filters='sRGB'>
-                    <feFlood flood-opacity='0' result='BackgroundImageFix' />
+                    colorInterpolationFilters='sRGB'>
+                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
                     <feColorMatrix
                         in='SourceAlpha'
                         type='matrix'
@@ -57,4 +57,4 @@ function ArrowSvg() {
     )
 }
 
-export default ArrowSvg
+export default CustomCursorArrowSvg

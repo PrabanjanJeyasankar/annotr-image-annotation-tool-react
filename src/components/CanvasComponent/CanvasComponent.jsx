@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import ImagePlusSvg from '../../svg/ImagePlusSvg/ImagePlusSvg'
+import QuoteSvg from '../../svg/QuoteSvg/QuoteSvg'
 import ImageAnnotatorComponent from '../ImageAnnotatorComponent/ImageAnnotatorComponent'
 import ImageUploaderComponent from '../ImageUploaderComponent/ImageUploaderComponent'
 import styles from './CanvasComponent.module.css'
@@ -41,6 +41,14 @@ const CanvasComponent = () => {
         [isImageUploaded]
     )
 
+    const handleClearImage = () => {
+        setImageData(null)
+        setIsImageUploaded(false)
+        setAnnotations([])
+        setIsFormVisible(false)
+        setEditingAnnotation(null)
+    }
+
     const handleDotClick = useCallback((e, annotation) => {
         e.stopPropagation()
         setEditingAnnotation(annotation)
@@ -52,14 +60,14 @@ const CanvasComponent = () => {
         (newAnnotation) => {
             setAnnotations((prev) => {
                 if (editingAnnotation) {
-                    return prev.map((ann) =>
-                        ann.id === editingAnnotation.id
+                    return prev.map((annotate) =>
+                        annotate.id === editingAnnotation.id
                             ? {
                                   ...newAnnotation,
                                   id: editingAnnotation.id,
                                   position: editingAnnotation.position,
                               }
-                            : ann
+                            : annotate
                     )
                 } else {
                     return [...prev, { ...newAnnotation, id: Date.now() }]
@@ -72,7 +80,7 @@ const CanvasComponent = () => {
     )
 
     const handleDeleteAnnotation = useCallback((annotationId) => {
-        setAnnotations((prev) => prev.filter((ann) => ann.id !== annotationId))
+        setAnnotations((prev) => prev.filter((annotate) => annotate.id !== annotationId))
         setIsFormVisible(false)
         setEditingAnnotation(null)
     }, [])
@@ -87,7 +95,6 @@ const CanvasComponent = () => {
         })
         dragRef.current = annotation.id
 
-        // Add event listeners
         document.addEventListener('mousemove', handleDrag)
         document.addEventListener('mouseup', handleDragEnd)
     }, [])
@@ -99,20 +106,13 @@ const CanvasComponent = () => {
             const img = divRef.current.querySelector('img')
             const rect = img.getBoundingClientRect()
 
-            // Calculate new position with offset and constraints
             const x = Math.max(
                 0,
-                Math.min(
-                    e.clientX - rect.left - dragOffset.x + 12,
-                    rect.width
-                )
+                Math.min(e.clientX - rect.left - dragOffset.x + 12, rect.width)
             )
             const y = Math.max(
                 0,
-                Math.min(
-                    e.clientY - rect.top - dragOffset.y + 12,
-                    rect.height
-                )
+                Math.min(e.clientY - rect.top - dragOffset.y + 12, rect.height)
             )
 
             setAnnotations((prev) =>
@@ -132,13 +132,17 @@ const CanvasComponent = () => {
         document.removeEventListener('mouseup', handleDragEnd)
     }, [handleDrag])
 
+
     return (
         <div className={styles.canvas_container}>
+            <div className={styles.app_logo} onClick={handleClearImage}>
+                <QuoteSvg width={24} height={24} />
+                <p className={styles.app_name}>Annotr</p>
+            </div>
             <div ref={divRef} className={styles.image_container}>
                 {!isImageUploaded && (
                     <div className={styles.placeholder_text}>
-                        <ImagePlusSvg height={54} width={54} />
-                        <span>Upload image here</span>
+                        <ImageUploaderComponent onImageUpload={onImageUpload} />
                     </div>
                 )}
                 {isImageUploaded && (
@@ -162,15 +166,10 @@ const CanvasComponent = () => {
                             top: `${annotation.position.y}px`,
                         }}
                         onClick={(e) => handleDotClick(e, annotation)}
-                        onMouseDown={(e) => handleDragStart(e, annotation)}
-                    >
-                        <div className={`${styles.annotation_inner_dot}`} ></div>
+                        onMouseDown={(e) => handleDragStart(e, annotation)}>
+                        <div className={`${styles.annotation_inner_dot}`}></div>
                     </div>
                 ))}
-            </div>
-
-            <div className={styles.image_uploader_container}>
-                <ImageUploaderComponent onImageUpload={onImageUpload} />
             </div>
 
             {isImageUploaded && (

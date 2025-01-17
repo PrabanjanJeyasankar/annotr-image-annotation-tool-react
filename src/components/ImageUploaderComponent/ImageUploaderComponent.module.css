@@ -6,19 +6,55 @@
     border: none;
 }
 
-.upload_button {
+.app_name_placeholder {
+    font-size: 2rem;
+    color: var(--color-primary-gray);
+    margin-bottom: 1rem;
+}
+
+.file_input {
+    display: none;
+}
+
+.drag_drop_container {
+    width: 100vw;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.upload_trigger_button {
+    margin-top: 2rem;
     border: none;
+    border-radius: 0.4rem;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     display: flex;
+    background-color: var(--color-primary-violet);
     align-items: center;
     gap: 8px;
 }
 
-.upload_button:hover {
-   opacity: 0.7;
+.upload_trigger_button:hover {
+    opacity: 0.7;
+}
+
+.dragging {
+    background-color: rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+}
+
+.drag_drop_text {
+    color: var(--color-secondary-gray);
+    font-size: 18px;
+    text-align: center;
+    max-width: 20rem;
 }
 
 .file_input {

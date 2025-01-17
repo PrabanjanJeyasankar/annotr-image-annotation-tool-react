@@ -7,6 +7,16 @@
     align-items: center;
 }
 
+.app_logo {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    cursor: pointer;
+}
+
 .placeholder_text {
     display: flex;
     flex-direction: column;
@@ -18,13 +28,15 @@
 
 .image_container {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     max-width: 90vh;
-    max-height: 70vh;
+    max-height: 60vh;
     background-color: white;
 }
 
 .image_uploader_container {
-    border: 1px dotted;
     position: absolute;
     top: 20px;
     right: 20px;
@@ -36,7 +48,7 @@
 }
 
 .placeholder_text {
-    border: 2px dotted;
+    border: 1px solid var(--color-background-violet);
     padding: 8rem 20rem;
     min-width: 100%;
     display: flex;
@@ -45,6 +57,9 @@
     font-size: 16px;
     color: #aaa;
 }
+
+
+
 .annotation_outer_dot {
     position: absolute;
     width: 40px;
