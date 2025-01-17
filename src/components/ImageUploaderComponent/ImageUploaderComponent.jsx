@@ -1,3 +1,4 @@
+import { toast } from '../../hooks/use-toast'
 import PropTypes from 'prop-types'
 import { useRef, useState } from 'react'
 import ImagePlusSvg from '../../svg/ImagePlusSvg/ImagePlusSvg'
@@ -29,7 +30,10 @@ const ImageUploaderComponent = ({ onImageUpload }) => {
             }
             reader.readAsDataURL(file)
         } else {
-            alert('Please drop a valid image file.')
+            toast({
+                title: 'Invalid file',
+                description: "Please drop a valid image file.",
+            })
         }
     }
 
@@ -42,7 +46,10 @@ const ImageUploaderComponent = ({ onImageUpload }) => {
             }
             reader.readAsDataURL(file)
         } else {
-            alert('Please upload a valid image file.')
+            toast({
+                title: 'Invalid file',
+                description: "Please drop a valid image file.",
+            })
         }
     }
 
