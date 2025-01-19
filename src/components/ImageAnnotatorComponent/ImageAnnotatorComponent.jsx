@@ -8,7 +8,7 @@ import styles from './ImageAnnotatorComponent.module.css'
 
 const ImageAnnotatorComponent = ({
     position,
-    isVisible,
+    isVisible = true,
     onSave,
     onDelete = () => {},
     onClose,
@@ -120,17 +120,6 @@ const ImageAnnotatorComponent = ({
     )
 }
 
-ImageAnnotatorComponent.propTypes = {
-    position: PropTypes.shape({
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-    }).isRequired,
-    isVisible: PropTypes.bool.isRequired,
-    onSave: PropTypes.func.isRequired,
-    onDelete: PropTypes.func,
-    onClose: PropTypes.func.isRequired,
-    annotation: PropTypes.string,
-    isEditing: PropTypes.bool.isRequired,
-}
+
 
 export default ImageAnnotatorComponent
